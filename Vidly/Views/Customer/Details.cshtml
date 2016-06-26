@@ -7,14 +7,11 @@
 
 <h2>Customer Details</h2>
 <h3>@Model.Name</h3>
-<h4>@Model.MembershipType.DurationInMonths Month subscription</h4>
-@if (Model.IsSubscribedToNewsletter)
-{
-    <h4>Is Subscribed to our Newsletter</h4>
-}
-else
-{
-    <h4>Is not subscribed to our Newsletter</h4>
-
-}
+<ul>
+    @if (Model.BirthDate != null)
+    {
+        <li> @Model.BirthDate.Value.ToShortDateString()</li>
+    }
+    <li>@Model.MembershipType.Name</li>
+</ul>
 
