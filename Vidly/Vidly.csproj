@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.1.0\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.0.1011, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -80,12 +84,24 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -193,13 +209,19 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\CustomersController.cs" />
+    <Compile Include="Controllers\Api\MoviesController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\MoviesController.cs" />
+    <Compile Include="Controllers\MovieController.cs" />
+    <Compile Include="Dtos\CustomerDto.cs" />
+    <Compile Include="Dtos\MovieDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -255,6 +277,38 @@
     <Compile Include="Migrations\201606260209387_PopulateGenres.Designer.cs">
       <DependentUpon>201606260209387_PopulateGenres.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606260652403_AddMembershipTypes.cs" />
+    <Compile Include="Migrations\201606260652403_AddMembershipTypes.Designer.cs">
+      <DependentUpon>201606260652403_AddMembershipTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606291016479_UpdatedMovies.cs" />
+    <Compile Include="Migrations\201606291016479_UpdatedMovies.Designer.cs">
+      <DependentUpon>201606291016479_UpdatedMovies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606292336212_AddGenres.cs" />
+    <Compile Include="Migrations\201606292336212_AddGenres.Designer.cs">
+      <DependentUpon>201606292336212_AddGenres.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606292346418_AddGenreID.cs" />
+    <Compile Include="Migrations\201606292346418_AddGenreID.Designer.cs">
+      <DependentUpon>201606292346418_AddGenreID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606300001591_RemovedRequiredFromMovieGenre.cs" />
+    <Compile Include="Migrations\201606300001591_RemovedRequiredFromMovieGenre.Designer.cs">
+      <DependentUpon>201606300001591_RemovedRequiredFromMovieGenre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607020416437_ClearRequired.cs" />
+    <Compile Include="Migrations\201607020416437_ClearRequired.Designer.cs">
+      <DependentUpon>201607020416437_ClearRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607020425510_MapIdToByte.cs" />
+    <Compile Include="Migrations\201607020425510_MapIdToByte.Designer.cs">
+      <DependentUpon>201607020425510_MapIdToByte.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607030144028_AddRangeToMovieStock.cs" />
+    <Compile Include="Migrations\201607030144028_AddRangeToMovieStock.Designer.cs">
+      <DependentUpon>201607030144028_AddRangeToMovieStock.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -262,10 +316,13 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MembershipType.cs" />
+    <Compile Include="Models\Min18YearsIfAMember.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\CustomerListViewModel.cs" />
+    <Compile Include="ViewModels\EditMovieViewModel.cs" />
+    <Compile Include="ViewModels\NewCustomerViewModel.cs" />
     <Compile Include="ViewModels\RandomMovieViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -329,12 +386,14 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Movies\Random.cshtml" />
+    <Content Include="Views\Movie\Random.cshtml" />
     <Content Include="Views\Shared\_navBar.cshtml" />
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Customer\Details.cshtml" />
-    <Content Include="Views\Movies\Index.cshtml" />
-    <Content Include="Views\Movies\Details.cshtml" />
+    <Content Include="Views\Movie\Index.cshtml" />
+    <Content Include="Views\Movie\Details.cshtml" />
+    <Content Include="Views\Customer\New.cshtml" />
+    <Content Include="Views\Movie\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -386,6 +445,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606260209387_PopulateGenres.resx">
       <DependentUpon>201606260209387_PopulateGenres.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606260652403_AddMembershipTypes.resx">
+      <DependentUpon>201606260652403_AddMembershipTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606291016479_UpdatedMovies.resx">
+      <DependentUpon>201606291016479_UpdatedMovies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606292336212_AddGenres.resx">
+      <DependentUpon>201606292336212_AddGenres.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606292346418_AddGenreID.resx">
+      <DependentUpon>201606292346418_AddGenreID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606300001591_RemovedRequiredFromMovieGenre.resx">
+      <DependentUpon>201606300001591_RemovedRequiredFromMovieGenre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607020416437_ClearRequired.resx">
+      <DependentUpon>201607020416437_ClearRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607020425510_MapIdToByte.resx">
+      <DependentUpon>201607020425510_MapIdToByte.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607030144028_AddRangeToMovieStock.resx">
+      <DependentUpon>201607030144028_AddRangeToMovieStock.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

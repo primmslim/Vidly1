@@ -4,6 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+@Html.ActionLink("New", "Create", "Movie",new { @class = "btn btn-primary btn-large" })
+
 <h2>Movie List</h2>
 
 <table class="table table-bordered table-hover">
@@ -19,7 +22,7 @@
         @foreach (var movie in Model)
         {
             <tr>
-                <td>@Html.ActionLink(movie.Name,"Details","Movies",new { id = movie.ID },null)</td>
+                <td>@Html.ActionLink(movie.Name,"Edit","Movie",new { id = movie.ID },null)</td>
                 <td>@movie.Genre.Name</td>
             </tr>
 

@@ -37,5 +37,62 @@ namespace Vidly.Controllers
             return View(customer);
 
         }
+
+        public ActionResult New()
+        {
+            var viewModel = new NewCustomerViewModel
+            {
+                Customer = new Customer(),
+                MembershipTypes = _context.MembershipTypes
+
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Save(NewCustomerViewModel viewModel)
+        {
+
+
+            if (!ModelState.IsValid)
+            {
+                var vm = new NewCustomerViewModel
+                {
+                    Customer = viewModel.Customer,
+                    MembershipTypes = _context.MembershipTypes.ToList()
+                };
+                return View("New", vm);
+            }
+
+            if (viewModel.Customer.Id == 0)
+            {
+                _context.Customers.Add(viewModel.Customer);
+            }else
+            {
+                var customerInDb = _context.Customers.Include("MembershipType").Single(c => c.Id == viewModel.Customer.Id);
+
+                customerInDb.Name = viewModel.Customer.Name;
+                customerInDb.BirthDate = viewModel.Customer.BirthDate;
+                customerInDb.MembershipTypeId = viewModel.Customer.MembershipTypeId;
+                customerInDb.IsSubscribedToNewsletter = viewModel.Customer.IsSubscribedToNewsletter;
+
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Index","Customer");
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+            if (customer == null) return HttpNotFound();
+            var viewModel = new NewCustomerViewModel
+            {
+                Customer = customer,
+                MembershipTypes = _context.MembershipTypes
+            };
+            return View("New", viewModel);
+        }
     }
 }
